@@ -1,0 +1,107 @@
+{
+  "usuarios": [
+    {
+      "id": "1",
+      "username": "brussss",
+      "rut": "",
+      "fechanac": "",
+      "apellido": "",
+      "email": "br.angel@duocuc.cl",
+      "password": "pepito123",
+      "isactive": true
+    },
+    {
+      "id": "98b1",
+      "username": "Bruce",
+      "rut": "",
+      "fechanac": "",
+      "apellido": "",
+      "email": "br.angel@duocuc.cl",
+      "password": "Pepito123",
+      "isactive": true
+    },
+    {
+      "id": "5f72",
+      "username": "Angela",
+      "rut": "21.179.811-3",
+      "apellido": "Troncoso",
+      "email": "ale.troncoso@duocuc.cl",
+      "password": "Pepito123",
+      "isactive": true
+    },
+    {
+      "id": "5c50",
+      "username": "Nicolas",
+      "rut": "21.432.412-4",
+      "apellido": "Mendez",
+      "email": "nico.mendez@duocuc.cl",
+      "password": "Pepito123",
+      "isactive": true
+    },
+    {
+      "id": "1a2c",
+      "username": "SOFIA",
+      "rut": "21.543.213-4",
+      "fechanac": "04-21-48",
+      "apellido": "GALAZ",
+      "email": "sofia.galaz@duocuc.cl",
+      "password": "Pepito123",
+      "isactive": true
+    }
+  ],
+    "registroclase": [
+      {
+        "id":"1",
+        "profesor":"Viviana",
+        "sala":"202",
+        "seccion":"013",
+        "ramo":"Programacion de App Moviles",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/mini_banner.jpg"
+      },
+      {
+        "id":"2",
+        "profesor":"Gonzalo",
+        "sala":"343",
+        "seccion":"011",
+        "ramo":"Etica Profesional",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/imagen2.jpg"
+      },
+      {
+        "id":"3",
+        "profesor":"Isidora",
+        "sala":"434",
+        "seccion":"009",
+        "ramo":"Integrated English Practice",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/ingles.jpg"
+      },
+      {
+        "id":"4",
+        "profesor":"Francisco",
+        "sala":"209",
+        "seccion":"015",
+        "ramo":"Calidad de Software",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/calidad.jpg"
+      },
+      {
+        "id":"5",
+        "profesor":"Daniel",
+        "sala":"208",
+        "seccion":"009",
+        "ramo":"Seguridad en Sistemas Computacionales",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/seguridad1.jpg"
+      }
+    ],
+    "justificaciones":[
+      {
+        "id":"1",
+        "correo":"vivianal@gmail.com",
+        "sala":"202",
+        "justificacion":"Me tuve que ir a medico"
+      }
+    ]
+  }
