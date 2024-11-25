@@ -101,7 +101,9 @@
         "id":"1",
         "correo":"vivianal@gmail.com",
         "sala":"202",
-        "justificacion":"Me tuve que ir a medico"
+        "justificacion":"Me tuve que ir a medico",
+        "seccion":"012",
+        "imagen":""
       }
     ]
   }
