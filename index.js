@@ -1,10 +1,12 @@
 const jsonServer = require("json-server");
+const fs = require("fs"); // Asegúrate de importar fs
 const server = jsonServer.create();
 const router = jsonServer.router("usuarios.json");
 const middlewares = jsonServer.defaults();
 const port = process.env.PORT || 10000;
 
 server.use(middlewares);
+
 // Middleware para manejar validaciones en el registro de asistencia
 server.post("/registroclase", (req, res, next) => {
   const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
@@ -22,38 +24,18 @@ server.post("/registroclase", (req, res, next) => {
   }
 
   // Si no existe, continúa con la operación normal de json-server
-  next();
+  db.registroclase.push(nuevaAsistencia);
+  fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2));
+  res.status(201).json(nuevaAsistencia);
 });
+
 // Ruta para obtener el contenido del archivo JSON
-app.get('/registroclase', (req, res) => {
+server.get('/registroclase', (req, res) => {
   const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
   res.json(data.registroclase);
 });
-app.get('/asisregister', (req, res) => {
-  const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
-  res.json(data.asisregister);
-});
+
 // Ruta para agregar un nuevo registro de asistencia
-app.post('/registroclase', (req, res) => {
-  const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
-  const nuevaAsistencia = req.body;
-
-  // Verificar si ya existe un registro con el mismo rut, ramo y fecha
-  const existe = data.registroclase.some(registro =>
-    registro.rut === nuevaAsistencia.rut &&
-    registro.ramo === nuevaAsistencia.ramo &&
-    registro.fecha === nuevaAsistencia.fecha
-  );
-
-  if (existe) {
-    return res.status(400).json({ message: "Ya registraste tu asistencia para esta asignatura hoy." });
-  }
-
-  data.registroclase.push(nuevaAsistencia);
-  fs.writeFileSync('./usuarios.json', JSON.stringify(data, null, 2));
-  res.status(201).json(nuevaAsistencia);
-});
-server.use(jsonServer.bodyParser);
 server.post('/asisregister', (req, res, next) => {
   const { rut, ramo, fecha } = req.body;
   const db = router.db; // Acceso a la base de datos
@@ -66,7 +48,11 @@ server.post('/asisregister', (req, res, next) => {
   
   next(); // Continúa con el registro si no hay duplicados
 });
+
+// Usar router para las rutas predeterminadas de json-server
 server.use(router);
 
-server.listen(port);
+server.listen(port, () => {
+  console.log(`JSON Server is running on port ${port}`);
+});
 
