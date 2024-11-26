@@ -39,21 +39,29 @@ server.get("/registroclase", (req, res) => {
 });
 
 // Ruta para agregar un nuevo registro de asistencia
-server.post("/asisregister", (req, res, next) => {
-  const { rut, ramo, fecha } = req.body;
-  const db = router.db; // Acceso a la base de datos
-  const asistencias = db.get("asisregister").value();
+server.post("/asisregister", (req, res) => {
+  const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
+  const nuevaAsistencia = req.body;
 
-  const duplicado = asistencias.some(
-    (a) => a.rut === rut && a.ramo === ramo && a.fecha === fecha
+  // Verificar si ya existe un registro con el mismo rut, ramo y fecha
+  const duplicado = db.asisregister.some(
+    (registro) =>
+      registro.rut === nuevaAsistencia.rut &&
+      registro.ramo === nuevaAsistencia.ramo &&
+      registro.fecha === nuevaAsistencia.fecha
   );
+
   if (duplicado) {
     return res
       .status(400)
-      .json({ message: "Ya has registrado asistencia para esta clase hoy." });
+      .json({ message: "Ya registraste tu asistencia para esta asignatura hoy." });
   }
 
-  next(); // Continúa con el registro si no hay duplicados
+  // Agregar la nueva asistencia al arreglo
+  db.asisregister.push(nuevaAsistencia);
+  fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2));
+
+  res.status(201).json(nuevaAsistencia);
 });
 
 // Usar el router de json-server
