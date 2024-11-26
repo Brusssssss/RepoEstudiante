@@ -6,6 +6,7 @@ const middlewares = jsonServer.defaults();
 const port = process.env.PORT || 10000;
 
 server.use(middlewares);
+server.use(jsonServer.bodyParser); // Necesario para procesar el body en JSON
 
 // Middleware para manejar validaciones en el registro de asistencia
 server.post("/registroclase", (req, res, next) => {
@@ -38,24 +39,24 @@ server.get("/registroclase", (req, res) => {
   res.json(data.registroclase);
 });
 
-// Ruta para agregar un nuevo registro de asistencia
+// Ruta para registrar asistencia
 server.post("/asisregister", (req, res) => {
   const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
   const nuevaAsistencia = req.body;
 
-  // Registrar en el log los datos recibidos para depuración
-  console.log("Datos recibidos:", nuevaAsistencia);
-
-  // Verificar si ya existe un registro con el mismo profesor, ramo y fecha
-  if (!nuevaAsistencia.profesor || !nuevaAsistencia.ramo || !nuevaAsistencia.fecha) {
-    return res.status(400).json({ message: "Datos incompletos o incorrectos." });
+  // Validar que los datos necesarios estén presentes
+  if (!nuevaAsistencia.ramo || !nuevaAsistencia.fecha || !nuevaAsistencia.email) {
+    return res
+      .status(400)
+      .json({ message: "Faltan datos obligatorios (ramo, fecha o email)." });
   }
 
+  // Verificar si ya existe un registro duplicado en asisregister
   const duplicado = db.asisregister.some(
     (registro) =>
-      registro.profesor === nuevaAsistencia.profesor &&
       registro.ramo === nuevaAsistencia.ramo &&
-      registro.fecha === nuevaAsistencia.fecha
+      registro.fecha === nuevaAsistencia.fecha &&
+      registro.email === nuevaAsistencia.email
   );
 
   if (duplicado) {
@@ -64,13 +65,30 @@ server.post("/asisregister", (req, res) => {
       .json({ message: "Ya registraste tu asistencia para esta asignatura hoy." });
   }
 
-  // Agregar la nueva asistencia al arreglo
-  db.asisregister.push(nuevaAsistencia);
-  fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2));
+  // Tomar datos desde registroclase relacionados con el ramo
+  const claseRelacionada = db.registroclase.find(
+    (clase) => clase.ramo === nuevaAsistencia.ramo
+  );
 
-  res.status(201).json(nuevaAsistencia);
+  if (!claseRelacionada) {
+    return res
+      .status(404)
+      .json({ message: "No se encontró la clase relacionada en registroclase." });
+  }
+
+  // Construir el nuevo registro con datos de registroclase y lo recibido en el body
+  const nuevoRegistro = {
+    ...claseRelacionada,
+    fecha: nuevaAsistencia.fecha, // Sobrescribir con la fecha proporcionada
+    email: nuevaAsistencia.email, // Agregar el email
+  };
+
+  // Guardar el nuevo registro en asisregister
+  db.asisregister.push(nuevoRegistro);
+  fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2)); // Guardar cambios
+
+  res.status(201).json(nuevoRegistro); // Devolver el registro creado
 });
-
 // Usar el router de json-server
 server.use(router);
 
