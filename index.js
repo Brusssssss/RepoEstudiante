@@ -49,6 +49,19 @@ app.post('/registroclase', (req, res) => {
   fs.writeFileSync('./usuarios.json', JSON.stringify(data, null, 2));
   res.status(201).json(nuevaAsistencia);
 });
+server.use(jsonServer.bodyParser);
+server.post('/asisregister', (req, res, next) => {
+  const { rut, ramo, fecha } = req.body;
+  const db = router.db; // Acceso a la base de datos
+  const asistencias = db.get('asisregister').value();
+
+  const duplicado = asistencias.some((a) => a.rut === rut && a.ramo === ramo && a.fecha === fecha);
+  if (duplicado) {
+    return res.status(400).json({ message: "Ya has registrado asistencia para esta clase hoy." });
+  }
+  
+  next(); // Continúa con el registro si no hay duplicados
+});
 server.use(router);
 
 server.listen(port);
