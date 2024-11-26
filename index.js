@@ -15,7 +15,7 @@ server.post("/registroclase", (req, res, next) => {
   // Validar si ya existe una asistencia con el mismo rut, ramo y fecha
   const existe = db.registroclase.some(
     (registro) =>
-      registro.rut === nuevaAsistencia.rut &&
+      registro.email === nuevaAsistencia.email &&
       registro.ramo === nuevaAsistencia.ramo &&
       registro.fecha === nuevaAsistencia.fecha
   );
@@ -46,7 +46,7 @@ server.post("/asisregister", (req, res) => {
   // Verificar si ya existe un registro con el mismo rut, ramo y fecha
   const duplicado = db.asisregister.some(
     (registro) =>
-      registro.rut === nuevaAsistencia.rut &&
+      registro.email === nuevaAsistencia.email &&
       registro.ramo === nuevaAsistencia.ramo &&
       registro.fecha === nuevaAsistencia.fecha
   );
