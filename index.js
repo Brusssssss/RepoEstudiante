@@ -43,7 +43,14 @@ server.post("/asisregister", (req, res) => {
   const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
   const nuevaAsistencia = req.body;
 
-  // Verificar si ya existe un registro con el mismo rut, ramo y fecha
+  // Registrar en el log los datos recibidos para depuración
+  console.log("Datos recibidos:", nuevaAsistencia);
+
+  // Verificar si ya existe un registro con el mismo profesor, ramo y fecha
+  if (!nuevaAsistencia.profesor || !nuevaAsistencia.ramo || !nuevaAsistencia.fecha) {
+    return res.status(400).json({ message: "Datos incompletos o incorrectos." });
+  }
+
   const duplicado = db.asisregister.some(
     (registro) =>
       registro.profesor === nuevaAsistencia.profesor &&
