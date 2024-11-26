@@ -106,5 +106,15 @@
         "imagen":""
       }
     ],
-  "asisregister":[]
+  "asisregister":[
+    {
+      "id":"5",
+        "profesor":"Daniel",
+        "sala":"208",
+        "seccion":"009",
+        "ramo":"Seguridad en Sistemas Computacionales",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/seguridad1.jpg"
+    }
+  ]
   }
