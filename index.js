@@ -86,6 +86,23 @@ server.post("/asisregister", (req, res) => {
 
   res.status(201).json(nuevoRegistro); // Devolver el registro creado
 });
+// Ruta para actualizar un usuario
+server.put("/usuarios/:id", (req, res) => {
+  const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
+  const { id } = req.params;
+  const updatedUser = req.body;
+
+  // Buscar al usuario en el arreglo
+  const index = db.usuarios.findIndex(user => user.id === parseInt(id));
+  if (index !== -1) {
+    db.usuarios[index] = { ...db.usuarios[index], ...updatedUser };
+    fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2));
+    res.status(200).json(db.usuarios[index]);
+  } else {
+    res.status(404).json({ message: "Usuario no encontrado" });
+  }
+});
+
 
 // Usar el router de json-server
 server.use(router);
