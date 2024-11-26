@@ -41,7 +41,7 @@ server.get("/registroclase", (req, res) => {
 
 // Ruta para registrar asistencia
 server.post("/asisregister", (req, res) => {
-  const db = JSON.parse(fs.readFileSync("usuarios.json", "utf8"));
+  const db = router.db; // Acceso a la base de datos JSON de json-server
   const nuevaAsistencia = req.body;
 
   // Validar que los datos necesarios estén presentes
@@ -52,12 +52,12 @@ server.post("/asisregister", (req, res) => {
   }
 
   // Verificar si ya existe un registro duplicado en asisregister
-  const duplicado = db.asisregister.some(
+  const duplicado = db.get("asisregister").find(
     (registro) =>
       registro.ramo === nuevaAsistencia.ramo &&
       registro.fecha === nuevaAsistencia.fecha &&
       registro.email === nuevaAsistencia.email
-  );
+  ).value();
 
   if (duplicado) {
     return res
@@ -65,10 +65,8 @@ server.post("/asisregister", (req, res) => {
       .json({ message: "Ya registraste tu asistencia para esta asignatura hoy." });
   }
 
-  // Tomar datos desde registroclase relacionados con el ramo
-  const claseRelacionada = db.registroclase.find(
-    (clase) => clase.ramo === nuevaAsistencia.ramo
-  );
+  // Buscar la clase relacionada en registroclase
+  const claseRelacionada = db.get("registroclase").find({ ramo: nuevaAsistencia.ramo }).value();
 
   if (!claseRelacionada) {
     return res
@@ -83,12 +81,12 @@ server.post("/asisregister", (req, res) => {
     email: nuevaAsistencia.email, // Agregar el email
   };
 
-  // Guardar el nuevo registro en asisregister
-  db.asisregister.push(nuevoRegistro);
-  fs.writeFileSync("usuarios.json", JSON.stringify(db, null, 2)); // Guardar cambios
+  // Agregar el nuevo registro a asisregister
+  db.get("asisregister").push(nuevoRegistro).write(); // Actualizar el archivo JSON
 
   res.status(201).json(nuevoRegistro); // Devolver el registro creado
 });
+
 // Usar el router de json-server
 server.use(router);
 
