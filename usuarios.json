@@ -108,7 +108,13 @@
     ],
   "asisregister":[
       {
-        
+        "id":"1",
+        "profesor":"Viviana",
+        "sala":"202",
+        "seccion":"013",
+        "ramo":"Programacion de App Moviles",
+        "fecha":"21/10/2024",
+        "imagen":"assets/images/mini_banner.jpg"
       }
     ]
   }
