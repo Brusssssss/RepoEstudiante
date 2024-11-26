@@ -29,6 +29,10 @@ app.get('/registroclase', (req, res) => {
   const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
   res.json(data.registroclase);
 });
+app.get('/asisregister', (req, res) => {
+  const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
+  res.json(data.asisregister);
+});
 // Ruta para agregar un nuevo registro de asistencia
 app.post('/registroclase', (req, res) => {
   const data = JSON.parse(fs.readFileSync('./usuarios.json', 'utf8'));
